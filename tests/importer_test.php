@@ -37,13 +37,15 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Testable object for the importer
  */
-class Testable_tool_ldapsync_importer extends \tool_ldapsync\importer {
+class Testable_tool_ldapsync_importer extends \tool_ldapsync\importer
+{
     /**
      * Override function visibility for testing
      * @param array $data
      * @return void
      */
-    public function updatemoodleaccounts(array $data) {
+    public function updatemoodleaccounts(array $data)
+    {
         // Change visibility to allow tests to call protected function.
         return parent::updatemoodleaccounts($data);
     }
@@ -51,14 +53,16 @@ class Testable_tool_ldapsync_importer extends \tool_ldapsync\importer {
 /**
  * Test case for ldapsync importer
  */
-class importer_test extends advanced_testcase {
+class importer_test extends advanced_testcase
+{
     /** @var \tool_ldapsync\importer This variable holds an instance of importer */
     private $sync = null;
 
     /**
      * Set up test case
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
 
         parent::setUp();
 
@@ -118,7 +122,8 @@ class importer_test extends advanced_testcase {
     /**
      * Tear down test case
      */
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         // Use ob_end_flush() to see output.
         ob_end_clean();
         parent::tearDown();
@@ -131,7 +136,8 @@ class importer_test extends advanced_testcase {
      * @param array     $ldapuser An array of ldapusers
      * @param array     $expected An array of expected results
      */
-    public function test_adding_new_users(array $ldapuser, array $expected) {
+    public function test_adding_new_users(array $ldapuser, array $expected)
+    {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -155,7 +161,8 @@ class importer_test extends advanced_testcase {
     /**
      * Test updating an existing account with apostrophes and dashes in last name
      */
-    public function test_update_existing_account_with_apostrophes_and_dashes() {
+    public function test_update_existing_account_with_apostrophes_and_dashes()
+    {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -216,7 +223,8 @@ class importer_test extends advanced_testcase {
     /**
      * Test skipping user with empty edupersonprincipalname (EPPN).
      */
-    public function test_user_with_empty_eppn_should_be_skipped() {
+    public function test_user_with_empty_eppn_should_be_skipped()
+    {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -274,7 +282,8 @@ class importer_test extends advanced_testcase {
      * Test that if the input does not contain any importable user, it
      * will not produce an error.
      */
-    public function test_skipping_all_users_will_not_generate_error() {
+    public function test_skipping_all_users_will_not_generate_error()
+    {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -339,7 +348,8 @@ class importer_test extends advanced_testcase {
      *
      * @return array List of data sets - (string) Test case description => (array) data
      */
-    public static function ldapsync_data_provider(): array {
+    public static function ldapsync_data_provider(): array
+    {
         return [
             'Simple case' => [
                 [

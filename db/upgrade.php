@@ -29,7 +29,8 @@
  * @param int $oldversion the version we are upgrading from
  * @return bool result
  */
-function xmldb_tool_ldapsync_upgrade($oldversion) {
+function xmldb_tool_ldapsync_upgrade($oldversion)
+{
     global $CFG, $DB;
 
     $result = true;

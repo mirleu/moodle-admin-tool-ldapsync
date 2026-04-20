@@ -34,11 +34,13 @@
  * Create a form that is similar to user bulk form to filter users for purging
  * @package tool_ldapsync
  */
-class ldapsync_purgeusers_action_form extends moodleform {
+class ldapsync_purgeusers_action_form extends moodleform
+{
     /**
      * Function definition for moodleform.
      */
-    private function definition() {
+    private function definition()
+    {
         global $CFG;
 
         $mform =& $this->_form;
@@ -155,7 +157,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
             echo $OUTPUT->header();
             redirect($returnurl, get_string('usernotconfirmed', '', fullname($user, true)));
         }
-    } else if ($resendemail && confirm_sesskey()) {
+    } elseif ($resendemail && confirm_sesskey()) {
         if (!$user = $DB->get_record('user', ['id' => $resendemail, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
             throw new \moodle_exception('nousers');
         }
@@ -173,7 +175,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
         }
 
         redirect($returnurl, $returnmsg, null, $messagetype);
-    } else if ($delete && confirm_sesskey()) {              // Delete a selected user, after confirmation.
+    } elseif ($delete && confirm_sesskey()) {              // Delete a selected user, after confirmation.
         require_capability('moodle/user:delete', $sitecontext);
 
         $user = $DB->get_record('user', ['id' => $delete, 'mnethostid' => $CFG->mnet_localhost_id], '*', MUST_EXIST);
@@ -197,7 +199,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
             echo $OUTPUT->confirm(get_string('deletecheckfull', '', "'$fullname'"), $deletebutton, $returnurl);
             echo $OUTPUT->footer();
             die;
-        } else if (data_submitted()) {
+        } elseif (data_submitted()) {
             if (delete_user($user)) {
                 \core\session\manager::gc(); // Remove stale sessions.
                 redirect($returnurl);
@@ -207,7 +209,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
                 echo $OUTPUT->notification($returnurl, get_string('deletednot', '', fullname($user, true)));
             }
         }
-    } else if ($acl && confirm_sesskey()) {
+    } elseif ($acl && confirm_sesskey()) {
         if (!has_capability('moodle/user:update', $sitecontext)) {
             throw new \moodle_exception('nopermissions', 'error', '', 'modify the NMET access control list');
         }
@@ -237,7 +239,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
         }
         $mnethosts = $DB->get_records('mnet_host', null, 'id', 'id,wwwroot,name');
         redirect($returnurl);
-    } else if ($suspend && confirm_sesskey()) {
+    } elseif ($suspend && confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
         if ($user = $DB->get_record('user', ['id' => $suspend, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
@@ -249,7 +251,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
             }
         }
         redirect($returnurl);
-    } else if ($unsuspend && confirm_sesskey()) {
+    } elseif ($unsuspend && confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
         if ($user = $DB->get_record('user', ['id' => $unsuspend, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
@@ -259,7 +261,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
             }
         }
         redirect($returnurl);
-    } else if ($unlock && confirm_sesskey()) {
+    } elseif ($unlock && confirm_sesskey()) {
         require_capability('moodle/user:update', $sitecontext);
 
         if ($user = $DB->get_record('user', ['id' => $unlock, 'mnethostid' => $CFG->mnet_localhost_id, 'deleted' => 0])) {
@@ -423,8 +425,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
             // Delete button.
             if (has_capability('moodle/user:delete', $sitecontext)) {
                 // No deleting of self, mnet accounts or admins allowed.
-                if (
-                    ($user->id != $USER->id) &&
+                if (($user->id != $USER->id) &&
                     (!is_mnet_remote_user($user)) &&
                     (!is_siteadmin($user))
                 ) {
@@ -438,11 +439,10 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
                 if (is_mnet_remote_user($user)) {
                     // The mnet users have special access control, they can not be deleted the standard way or suspended.
                     $accessctrl = 'allow';
-                    if (
-                        $acl = $DB->get_record(
-                            'mnet_sso_access_control',
-                            ['username' => $user->username, 'mnet_host_id' => $user->mnethostid]
-                        )
+                    if ($acl = $DB->get_record(
+                        'mnet_sso_access_control',
+                        ['username' => $user->username, 'mnet_host_id' => $user->mnethostid]
+                    )
                     ) {
                         $accessctrl = $acl->accessctrl;
                     }
@@ -485,7 +485,7 @@ if (!has_capability('moodle/user:update', $sitecontext) && !has_capability('mood
                 } else {
                     $lastcolumn = get_string($accessctrl, 'mnet');
                 }
-            } else if ($user->confirmed == 0) {
+            } elseif ($user->confirmed == 0) {
                 if (has_capability('moodle/user:update', $sitecontext)) {
                     $lastcolumn = html_writer::link(
                         new moodle_url(

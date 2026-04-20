@@ -31,14 +31,16 @@ require_once($CFG->dirroot . '/' . $CFG->admin . '/user/lib.php');
 /**
  * Inherits user_filtering to add new fields to filter
  */
-class user_filtering extends \user_filtering {
+class user_filtering extends \user_filtering
+{
     /**
      * Creates known user filter if present
      * @param string $fieldname
      * @param boolean $advanced
      * @return object filter
      */
-    public function get_field($fieldname, $advanced) {
+    public function get_field($fieldname, $advanced)
+    {
         global $USER, $CFG, $DB, $SITE;
 
         switch ($fieldname) {
@@ -69,14 +71,16 @@ class user_filtering extends \user_filtering {
  * @copyright Copyright (c) 2019, UCSF Center for Knowledge Management
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_filter_activeonldap extends \user_filter_yesno {
+class user_filter_activeonldap extends \user_filter_yesno
+{
     /**
      * Returns the condition to be used with SQL
      *
      * @param array $data filter settings
      * @return array sql string and $params
      */
-    public function get_sql_filter($data) {
+    public function get_sql_filter($data)
+    {
 
         $value = $data['value'];
         $not = $value ? '' : 'NOT';

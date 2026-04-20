@@ -28,20 +28,23 @@ namespace tool_ldapsync\task;
  * A scheduled task class for LDAP user sync.
  *
  */
-class update_task extends \core\task\scheduled_task {
+class update_task extends \core\task\scheduled_task
+{
     /**
      * Get a descriptive name for this task (shown to admins).
      *
      * @return string
      */
-    public function get_name() {
+    public function get_name()
+    {
         return get_string('updatetask', 'tool_ldapsync');
     }
 
     /**
      * Run load_ldap_data_to_table
      */
-    public function execute() {
+    public function execute()
+    {
         global $CFG;
 
         $sync = new \tool_ldapsync\importer();

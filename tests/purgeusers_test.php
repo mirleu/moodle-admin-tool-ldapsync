@@ -37,13 +37,15 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Testable object for the importer
  */
-class Testable_tool_ldapsync_importer_for_purgeusers extends \tool_ldapsync\importer {
+class Testable_tool_ldapsync_importer_for_purgeusers extends \tool_ldapsync\importer
+{
     /**
      * Get updates from LDAP
      * @param connection $ldap
      * @param string $ldaptimestamp
      */
-    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
+    public function getupdatesfromldap($ldap, $ldaptimestamp = null)
+    {
         // Change visibility to allow tests to call protected function.
         return parent::getupdatesfromldap($ldap, $ldaptimestamp);
     }
@@ -51,7 +53,8 @@ class Testable_tool_ldapsync_importer_for_purgeusers extends \tool_ldapsync\impo
 /**
  * Test case for purgeusers
  */
-class purgeusers_test extends advanced_testcase {
+class purgeusers_test extends advanced_testcase
+{
     /** @var \tool_ldapsync\importer $sync */
     private $sync = null;
     /** @var \LDAP\Connection $ldapconn  */
@@ -60,7 +63,8 @@ class purgeusers_test extends advanced_testcase {
     /**
      * Set up test case
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         global $CFG;
 
         parent::setUp();
@@ -71,8 +75,7 @@ class purgeusers_test extends advanced_testcase {
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
-        if (
-            !defined('TEST_TOOL_LDAPSYNC_HOST_URL') || !defined('TEST_TOOL_LDAPSYNC_BIND_DN')
+        if (!defined('TEST_TOOL_LDAPSYNC_HOST_URL') || !defined('TEST_TOOL_LDAPSYNC_BIND_DN')
             || !defined('TEST_TOOL_LDAPSYNC_BIND_PW') || !defined('TEST_TOOL_LDAPSYNC_DOMAIN')
         ) {
             $this->markTestSkipped('External LDAP test server not configured.');
@@ -82,17 +85,16 @@ class purgeusers_test extends advanced_testcase {
 
         // Make sure we can connect the server.
         $debuginfo = '';
-        if (
-            !$connection = ldap_connect_moodle(
-                TEST_TOOL_LDAPSYNC_HOST_URL,
-                3,
-                'rfc2307',
-                TEST_TOOL_LDAPSYNC_BIND_DN,
-                TEST_TOOL_LDAPSYNC_BIND_PW,
-                LDAP_DEREF_NEVER,
-                $debuginfo,
-                false
-            )
+        if (!$connection = ldap_connect_moodle(
+            TEST_TOOL_LDAPSYNC_HOST_URL,
+            3,
+            'rfc2307',
+            TEST_TOOL_LDAPSYNC_BIND_DN,
+            TEST_TOOL_LDAPSYNC_BIND_PW,
+            LDAP_DEREF_NEVER,
+            $debuginfo,
+            false
+        )
         ) {
             $this->markTestSkipped('Can not connect to LDAP test server: ' . $debuginfo);
         }
@@ -161,7 +163,8 @@ class purgeusers_test extends advanced_testcase {
     /**
      * Tear down test case
      */
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         if (!$this->ldapConn) {
             $this->recursive_delete($this->ldapConn, TEST_TOOL_LDAPSYNC_DOMAIN, 'dc=moodletest');
             ldap_close($this->ldapConn);
@@ -176,7 +179,8 @@ class purgeusers_test extends advanced_testcase {
     /**
      * Test create_ldap_user function
      */
-    public function test_checkifusersinldap() {
+    public function test_checkifusersinldap()
+    {
         try {
             $ldap = $this->sync->ldap_connect();
         } catch (Exception $e) {
@@ -200,7 +204,8 @@ class purgeusers_test extends advanced_testcase {
     /**
      * Set the delete flag for users that have never logged in.
      */
-    public function test_setdeletedflagforneverloginusers() {
+    public function test_setdeletedflagforneverloginusers()
+    {
         global $CFG;
 
         require_once($CFG->dirroot . '/user/lib.php');
@@ -246,7 +251,8 @@ class purgeusers_test extends advanced_testcase {
     /**
      * Test user is enrolled in a course.
      */
-    public function test_isuserenrolledinanycourse() {
+    public function test_isuserenrolledinanycourse()
+    {
         global $CFG, $DB;
         $this->resetAfterTest(true);
 
@@ -296,7 +302,8 @@ class purgeusers_test extends advanced_testcase {
      * @param string $topdn
      * @param string $i
      */
-    protected function create_ldap_user($connection, $topdn, $i) {
+    protected function create_ldap_user($connection, $topdn, $i)
+    {
         $o = [];
         // Base object class.
         $o['objectClass']   = ['inetOrgPerson', 'organizationalPerson', 'person', 'posixAccount'];
@@ -326,7 +333,8 @@ class purgeusers_test extends advanced_testcase {
      * @param string $topdn The top level distinguished name of an LDAP entity.
      * @param string $i
      */
-    protected function delete_ldap_user($connection, $topdn, $i) {
+    protected function delete_ldap_user($connection, $topdn, $i)
+    {
         ldap_delete($connection, 'cn=username' . $i . ',ou=users,' . $topdn);
     }
 
@@ -336,7 +344,8 @@ class purgeusers_test extends advanced_testcase {
      * @param string $dn The distinguished name of an LDAP entity.
      * @param string $filter A filter for LDAP entity.
      */
-    protected function recursive_delete($connection, $dn, $filter) {
+    protected function recursive_delete($connection, $dn, $filter)
+    {
         if ($res = ldap_list($connection, $dn, $filter, ['dn'])) {
             $info = ldap_get_entries($connection, $res);
             ldap_free_result($res);
