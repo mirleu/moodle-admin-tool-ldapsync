@@ -15,32 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for tool_ldapsync.
+ * Testable object for the importer (moved from plugin_test.php)
  *
  * @package    tool_ldapsync
- * @author     Carson Tam <carson.tam@ucsf.edu>
  * @copyright  Copyright (c) 2019, UCSF Center for Knowledge Management
+ * @author     2019 Carson Tam {@email carson.tam@ucsf.edu}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_ldapsync\privacy;
-
-/**
- * Privacy Subsystem for tool_ldapsync implementing null_provider.
- *
- * @author     Carson Tam <carson.tam@ucsf.edu>
- * @copyright  Copyright (c) 2019, UCSF Center for Knowledge Management
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class provider implements \core_privacy\local\metadata\null_provider
-{
+class Testable_tool_ldapsync_importer_for_plugin extends \tool_ldapsync\importer {
     /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
-     *
-     * @return  string
+     * Change the visibility scope of the protected function to public
      */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
+    public function connecttoldap() {
+        return parent::connecttoldap();
+    }
+
+    /**
+     * Searches LDAP for user records that were updated/created after a given datetime.
+     * @param \LDAP\Connection $ldap the LDAP connection
+     * @param string|null $ldaptimestamp the datetime
+     * @return array nested array of user records
+     * @throws Exception if search fails
+     */
+    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
+        return parent::getupdatesfromldap($ldap, $ldaptimestamp);
     }
 }

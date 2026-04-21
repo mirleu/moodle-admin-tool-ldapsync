@@ -33,26 +33,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-/**
- * Testable object for the importer
- */
-class Testable_tool_ldapsync_importer extends \tool_ldapsync\importer
-{
-    /**
-     * Override function visibility for testing
-     * @param array $data
-     * @return void
-     */
-    public function updatemoodleaccounts(array $data) {
-        // Change visibility to allow tests to call protected function.
-        return parent::updatemoodleaccounts($data);
-    }
-}
+require_once(__DIR__ . '/testable_tool_ldapsync_importer.php');
 /**
  * Test case for ldapsync importer
  */
-class importer_test extends advanced_testcase
+final class importer_test extends advanced_testcase
 {
     /** @var \tool_ldapsync\importer This variable holds an instance of importer */
     private $sync = null;

@@ -34,21 +34,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Testable object for the importer
- */
-class Testable_tool_ldapsync_importer_for_purgeusers extends \tool_ldapsync\importer
-{
-    /**
-     * Get updates from LDAP
-     * @param connection $ldap
-     * @param string $ldaptimestamp
-     */
-    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
-        // Change visibility to allow tests to call protected function.
-        return parent::getupdatesfromldap($ldap, $ldaptimestamp);
-    }
-}
+require_once(__DIR__ . '/testable_tool_ldapsync_importer_for_purgeusers.php');
 /**
  * Test case for purgeusers
  */

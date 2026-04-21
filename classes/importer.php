@@ -150,8 +150,7 @@ class importer
      * @return string
      * TODO: refactor this out into a utility class
      */
-    public static function formatldaptimestamp($ts): string
-    {
+    public static function formatldaptimestamp($ts): string {
         $datetime = \DateTime::createFromFormat('U', $ts);
         return $datetime->format('YmdHis\Z');
     }
@@ -989,8 +988,7 @@ EOL;
      *
      * @return array list of custom fields.
      */
-    public function get_custom_user_profile_fields()
-    {
+    public function get_custom_user_profile_fields() {
         global $DB;
         // If already retrieved then return.
         if (!is_null($this->customfields)) {
@@ -1013,8 +1011,7 @@ EOL;
      *
      * @return array
      */
-    public function ldap_attributes()
-    {
+    public function ldap_attributes() {
         $moodleattributes = [];
         // If we have custom fields then merge them with user fields.
         $customfields = $this->get_custom_user_profile_fields();
@@ -1065,8 +1062,7 @@ EOL;
     /**
      * Test if settings are correct, print info to output.
      */
-    public function test_settings()
-    {
+    public function test_settings() {
         global $OUTPUT;
 
         if (!function_exists('ldap_connect')) { // Is php-ldap really there?
@@ -1124,8 +1120,7 @@ EOL;
      * @link https://www.php.net/manual/en/ldap.examples-controls.php
      * @link https://www.php.net/manual/en/ldap.controls.php
      */
-    protected function get_ldap_controls(object $config, string $ldapcookie): array
-    {
+    protected function get_ldap_controls(object $config, string $ldapcookie): array {
         return [
             [
                 'oid' => LDAP_CONTROL_PAGEDRESULTS,

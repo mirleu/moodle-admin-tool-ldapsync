@@ -1,0 +1,57 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Inherits user_filtering to add new fields to filter
+ *
+ * @package    tool_ldapsync
+ * @copyright  Copyright (c) 2019, UCSF Center for Knowledge Management
+ * @author     2019 Carson Tam {@email carson.tam@ucsf.edu}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+class user_filtering extends \user_filtering
+{
+    /**
+     * Creates known user filter if present
+     * @param string $fieldname
+     * @param boolean $advanced
+     * @return object filter
+     */
+    public function get_field($fieldname, $advanced) {
+        global $USER, $CFG, $DB, $SITE;
+
+        switch ($fieldname) {
+            case 'timecreated':
+                return new \user_filter_date('timecreated', get_string('createdtime', 'tool_ldapsync'), $advanced, 'timecreated');
+            case 'activeonldap':
+                return new user_filter_activeonldap(
+                    'activeonldap',
+                    get_string('activeonldap', 'tool_ldapsync'),
+                    $advanced,
+                    'activeonldap'
+                );
+            /* Not use for now.
+            case 'additionalldapfilter':
+                return new \user_filter_text('ldapfilter',
+                                             get_string('additionalldapfilter', 'tool_ldapsync'),
+                                             $advanced, 'ldapfilter');
+            */
+            default:
+                return parent::get_field($fieldname, $advanced);
+        }
+    }
+}

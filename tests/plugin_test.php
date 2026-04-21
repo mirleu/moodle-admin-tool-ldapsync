@@ -33,35 +33,12 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-/**
- * Testable object for the importer
- */
-class Testable_tool_ldapsync_importer_for_plugin extends \tool_ldapsync\importer
-{
-    /**
-     * Change the visibility scope of the protected function to public
-     */
-    public function connecttoldap() {
-        return parent::connecttoldap();
-    }
-
-    /**
-     * Searches LDAP for user records that were updated/created after a given datetime.
-     * @param \LDAP\Connection $ldap the LDAP connection
-     * @param string|null $ldaptimestamp the datetime
-     * @return array nested array of user records
-     * @throws Exception if search fails
-     */
-    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
-        return parent::getupdatesfromldap($ldap, $ldaptimestamp);
-    }
-}
+require_once(__DIR__ . '/testable_tool_ldapsync_importer_for_plugin.php');
 
 /**
  * Test case for ldapsync plugin
  */
-class plugin_test extends advanced_testcase
+final class plugin_test extends advanced_testcase
 {
     /** @var \tool_ldapsync\importer $sync */
     private $sync = null;

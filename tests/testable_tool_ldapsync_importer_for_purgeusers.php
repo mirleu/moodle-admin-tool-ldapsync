@@ -15,32 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for tool_ldapsync.
+ * Testable object for the importer (moved from purgeusers_test.php)
  *
  * @package    tool_ldapsync
- * @author     Carson Tam <carson.tam@ucsf.edu>
- * @copyright  Copyright (c) 2019, UCSF Center for Knowledge Management
+ * @copyright  Copyright (c) 2020, UCSF Center for Knowledge Management
+ * @author     2020 Carson Tam {@email carson.tam@ucsf.edu}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_ldapsync\privacy;
-
-/**
- * Privacy Subsystem for tool_ldapsync implementing null_provider.
- *
- * @author     Carson Tam <carson.tam@ucsf.edu>
- * @copyright  Copyright (c) 2019, UCSF Center for Knowledge Management
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class provider implements \core_privacy\local\metadata\null_provider
-{
+class Testable_tool_ldapsync_importer_for_purgeusers extends \tool_ldapsync\importer {
     /**
-     * Get the language string identifier with the component's language
-     * file to explain why this plugin stores no data.
-     *
-     * @return  string
+     * Get updates from LDAP
+     * @param connection $ldap
+     * @param string $ldaptimestamp
      */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
+    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
+        // Change visibility to allow tests to call protected function.
+        return parent::getupdatesfromldap($ldap, $ldaptimestamp);
     }
 }
