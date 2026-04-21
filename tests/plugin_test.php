@@ -42,8 +42,7 @@ class Testable_tool_ldapsync_importer_for_plugin extends \tool_ldapsync\importer
     /**
      * Change the visibility scope of the protected function to public
      */
-    public function connecttoldap()
-    {
+    public function connecttoldap() {
         return parent::connecttoldap();
     }
 
@@ -54,8 +53,7 @@ class Testable_tool_ldapsync_importer_for_plugin extends \tool_ldapsync\importer
      * @return array nested array of user records
      * @throws Exception if search fails
      */
-    public function getupdatesfromldap($ldap, $ldaptimestamp = null)
-    {
+    public function getupdatesfromldap($ldap, $ldaptimestamp = null) {
         return parent::getupdatesfromldap($ldap, $ldaptimestamp);
     }
 }
@@ -73,8 +71,7 @@ class plugin_test extends advanced_testcase
     /**
      * Set up test case
      */
-    protected function setUp(): void
-    {
+    protected function setUp(): void {
         global $CFG;
 
         parent::setUp();
@@ -84,7 +81,8 @@ class plugin_test extends advanced_testcase
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
-        if (!defined('TEST_TOOL_LDAPSYNC_HOST_URL')
+        if (
+            !defined('TEST_TOOL_LDAPSYNC_HOST_URL')
             || !defined('TEST_TOOL_LDAPSYNC_BIND_DN')
             || !defined('TEST_TOOL_LDAPSYNC_BIND_PW')
             || !defined('TEST_TOOL_LDAPSYNC_DOMAIN')
@@ -96,16 +94,17 @@ class plugin_test extends advanced_testcase
 
         // Make sure we can connect the server.
         $debuginfo = '';
-        if (!$connection = ldap_connect_moodle(
-            TEST_TOOL_LDAPSYNC_HOST_URL,
-            3,
-            'rfc2307',
-            TEST_TOOL_LDAPSYNC_BIND_DN,
-            TEST_TOOL_LDAPSYNC_BIND_PW,
-            LDAP_DEREF_NEVER,
-            $debuginfo,
-            false
-        )
+        if (
+            !$connection = ldap_connect_moodle(
+                TEST_TOOL_LDAPSYNC_HOST_URL,
+                3,
+                'rfc2307',
+                TEST_TOOL_LDAPSYNC_BIND_DN,
+                TEST_TOOL_LDAPSYNC_BIND_PW,
+                LDAP_DEREF_NEVER,
+                $debuginfo,
+                false
+            )
         ) {
             $this->markTestSkipped('Can not connect to LDAP test server: ' . $debuginfo);
         }
@@ -185,8 +184,7 @@ class plugin_test extends advanced_testcase
     /**
      * Tear down test case
      */
-    protected function tearDown(): void
-    {
+    protected function tearDown(): void {
         if (!$this->ldapConn) {
             $this->recursive_delete($this->ldapConn, TEST_TOOL_LDAPSYNC_DOMAIN, 'dc=moodletest');
             ldap_close($this->ldapConn);
@@ -203,8 +201,7 @@ class plugin_test extends advanced_testcase
      *
      * @group ldaptests
      */
-    public function test_connecttoldap()
-    {
+    public function test_connecttoldap() {
         try {
             $ldap = $this->sync->connecttoldap();
             $this->assertInstanceOf('LDAP\Connection', $ldap);
@@ -220,8 +217,7 @@ class plugin_test extends advanced_testcase
      * @group ldaptests
      * @depends test_connecttoldap
      */
-    public function test_get_updates_from_ldap()
-    {
+    public function test_get_updates_from_ldap() {
         $ldap = $this->sync->connecttoldap();
 
         // Create a few users
@@ -265,8 +261,7 @@ class plugin_test extends advanced_testcase
      * @group ldaptests
      * @depends test_connecttoldap
      */
-    public function test_tool_ldapsync_importer()
-    {
+    public function test_tool_ldapsync_importer() {
         global $CFG, $DB;
 
         // // Create new empty test container.
@@ -463,8 +458,7 @@ class plugin_test extends advanced_testcase
      * @param string $topdn
      * @param string $i
      */
-    protected function create_ldap_user($connection, $topdn, $i)
-    {
+    protected function create_ldap_user($connection, $topdn, $i) {
         $o = [];
         $o['objectClass']   = ['inetOrgPerson', 'organizationalPerson', 'person', 'posixAccount', 'eduPerson', 'ucsfEduPerson'];
         $o['cn']            = 'username' . $i;
@@ -496,8 +490,7 @@ class plugin_test extends advanced_testcase
      * @param string $topdn
      * @param string $i attributes
      */
-    protected function delete_ldap_user($connection, $topdn, $i)
-    {
+    protected function delete_ldap_user($connection, $topdn, $i) {
         ldap_delete($connection, 'cn=username' . $i . ',ou=users,' . $topdn);
     }
 
@@ -507,8 +500,7 @@ class plugin_test extends advanced_testcase
      * @param string $dn base
      * @param string $filter
      */
-    protected function recursive_delete($connection, $dn, $filter)
-    {
+    protected function recursive_delete($connection, $dn, $filter) {
         if ($res = ldap_list($connection, $dn, $filter, ['dn'])) {
             $info = ldap_get_entries($connection, $res);
             ldap_free_result($res);

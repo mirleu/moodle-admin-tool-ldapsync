@@ -39,8 +39,7 @@ class user_filtering extends \user_filtering
      * @param boolean $advanced
      * @return object filter
      */
-    public function get_field($fieldname, $advanced)
-    {
+    public function get_field($fieldname, $advanced) {
         global $USER, $CFG, $DB, $SITE;
 
         switch ($fieldname) {
@@ -79,8 +78,7 @@ class user_filter_activeonldap extends \user_filter_yesno
      * @param array $data filter settings
      * @return array sql string and $params
      */
-    public function get_sql_filter($data)
-    {
+    public function get_sql_filter($data) {
 
         $value = $data['value'];
         $not = $value ? '' : 'NOT';

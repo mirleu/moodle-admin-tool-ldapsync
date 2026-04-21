@@ -95,8 +95,7 @@ class importer
      * Constructor for Importer
      * @param integer $ts
      */
-    public function __construct($ts = null)
-    {
+    public function __construct($ts = null) {
         // Making sure php-ldap extension is present.
         if (!extension_loaded('ldap')) {
             throw new Exception("php-ldap extension is not loaded in memory. \n");
@@ -106,7 +105,7 @@ class importer
 
         if (!empty($ts)) {
             $this->ts = $ts;
-        } elseif (!empty($this->config->last_synched_on)) {
+        } else if (!empty($this->config->last_synched_on)) {
             $this->ts = strtotime($this->config->last_synched_on);
         }
 
@@ -160,8 +159,7 @@ class importer
     /**
      * 'main' method of the class, runs the synchronization process
      */
-    public function run()
-    {
+    public function run() {
         // 1. get the new/updated entries from LDAP
         $ldap = $this->connecttoldap();
         $start = time();
@@ -177,8 +175,7 @@ class importer
      *
      * @param string $username
      */
-    public function user_exists($username)
-    {
+    public function user_exists($username) {
         $extusername = core_text::convert($username, 'utf-8', $this->config->ldapencoding);
 
         // Returns true if given username exists on ldap.
@@ -191,8 +188,7 @@ class importer
      * @param string $userid
      * return # of users not in LDAP.
      */
-    public function check_users_in_ldap($userid)
-    {
+    public function check_users_in_ldap($userid) {
         if (is_array($userid)) {
             $userids = array_unique($userid);
             $ldapcampusidproperty = $this->config->user_attribute;
@@ -217,8 +213,7 @@ class importer
      * @param object $user
      * @return bool
      */
-    public function delete_never_login($user)
-    {
+    public function delete_never_login($user) {
         global $DB;
 
         if (isset($user->lastlogin) && $user->lastlogin == 0) {
@@ -235,8 +230,7 @@ class importer
     /**
      * Load LDAP data into tool_ldapsync table
      */
-    public function load_ldap_data_to_table()
-    {
+    public function load_ldap_data_to_table() {
         global $CFG, $DB;
 
         $fresult = [];
@@ -387,8 +381,7 @@ class importer
      * @param string $filter An LDAP search filter to select desired users
      * @return array of LDAP user names converted to UTF-8
      */
-    private function ldap_get_userlist($filter = '*')
-    {
+    private function ldap_get_userlist($filter = '*') {
         global $CFG;
 
         $fresult = [];
@@ -484,8 +477,7 @@ class importer
      * @return \LDAP\Connection the connected and bound LDAP handle
      * @throws Exception if connectivity to LDAP server couldn't be fully established.
      */
-    protected function connecttoldap()
-    {
+    protected function connecttoldap() {
         echo "Connecting to LDAP server ... ";
         if (!$ldapconnection = $this->ldap_connect()) {
             throw new Exception("Couldn't bind to LDAP server.");
@@ -500,8 +492,7 @@ class importer
      *
      * @return mixed connection result or false.
      */
-    public function ldap_connect()
-    {
+    public function ldap_connect() {
         // Cache ldap connections. They are expensive to set up
         // and can drain the TCP/IP ressources on the server if we
         // are syncing a lot of users (as we try to open a new connection
@@ -513,16 +504,17 @@ class importer
         }
 
         $debuginfo = '';
-        if ($ldapconnection = ldap_connect_moodle(
-            $this->config->host_url,
-            $this->config->ldap_version,
-            $this->config->user_type,
-            $this->config->bind_dn,
-            $this->config->bind_pw,
-            $this->config->opt_deref,
-            $debuginfo,
-            $this->config->start_tls
-        )
+        if (
+            $ldapconnection = ldap_connect_moodle(
+                $this->config->host_url,
+                $this->config->ldap_version,
+                $this->config->user_type,
+                $this->config->bind_dn,
+                $this->config->bind_pw,
+                $this->config->opt_deref,
+                $debuginfo,
+                $this->config->start_tls
+            )
         ) {
             $this->ldapconns = 1;
             $this->ldapconnection = $ldapconnection;
@@ -539,8 +531,7 @@ class importer
      *                       cached connections. This is needed when we've used paged results
      *                       and want to use normal results again.
      */
-    public function ldap_close($force = false)
-    {
+    public function ldap_close($force = false) {
         $this->ldapconns--;
         if (($this->ldapconns == 0) || ($force)) {
             $this->ldapconns = 0;
@@ -558,8 +549,7 @@ class importer
      *
      * @throws Exception if search fails
      */
-    protected function getupdatesfromldap($ldap, $ldaptimestamp = null)
-    {
+    protected function getupdatesfromldap($ldap, $ldaptimestamp = null) {
         if (empty($ldaptimestamp)) {
             echo "Start prowling LDAP for all records... ";
             $filter = '(&(' . $this->config->user_attribute . '=*)' . $this->config->objectclass . ')';
@@ -639,7 +629,7 @@ class importer
                                     $email = trim(explode($delimiter, $email)[0]);
                                 }
                                 $result[$attr] = $email;
-                            } elseif (core_text::strtolower('sn') == $attr
+                            } else if (core_text::strtolower('sn') == $attr
                                         || (core_text::strtolower('ucsfEduPreferredLastName') == $attr)
                                         || (core_text::strtolower('givenname') == $attr)
                                         || (core_text::strtolower('ucsfEduPreferredGivenName') == $attr)
@@ -654,7 +644,7 @@ class importer
                                 } else {
                                     $result[$attr] = $ldapattrsls[$attr][0];
                                 }
-                            } elseif (('createtimestamp' == $attr) || ('modifytimestamp' == $attr)) {
+                            } else if (('createtimestamp' == $attr) || ('modifytimestamp' == $attr)) {
                                 $ts = strtotime(core_text::convert(
                                     $ldapattrsls[$attr][0],
                                     $this->config->ldapencoding,
@@ -693,8 +683,7 @@ class importer
      * @see auth_plugin_ldap::sync_users()
      * @throws Exception on database/SQL related failures
      */
-    protected function updatemoodleaccounts(array $data)
-    {
+    protected function updatemoodleaccounts(array $data) {
         global $CFG, $DB;
         if (!count($data)) {
             return;
@@ -1058,8 +1047,7 @@ EOL;
      *      within translation strings as in get_string()
      * @return true or a message in case of error
      */
-    private function test_dn($ldapconn, $dn, $message, $a = null)
-    {
+    private function test_dn($ldapconn, $dn, $message, $a = null) {
         $ldapresult = @ldap_read($ldapconn, $dn, '(objectClass=*)', []);
         if (!$ldapresult) {
             if (ldap_errno($ldapconn) == 32) {

@@ -66,8 +66,7 @@ unset($countries);
  * @param string|int $b
  * @return float|int
  */
-function sort_compare($a, $b)
-{
+function sort_compare($a, $b) {
     global $sort, $dir;
     if ($sort == 'lastaccess') {
         $rez = $b->lastaccess - $a->lastaccess;

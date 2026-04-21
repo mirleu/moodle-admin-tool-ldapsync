@@ -35,16 +35,14 @@ class update_task extends \core\task\scheduled_task
      *
      * @return string
      */
-    public function get_name()
-    {
+    public function get_name() {
         return get_string('updatetask', 'tool_ldapsync');
     }
 
     /**
      * Run load_ldap_data_to_table
      */
-    public function execute()
-    {
+    public function execute() {
         global $CFG;
 
         $sync = new \tool_ldapsync\importer();
